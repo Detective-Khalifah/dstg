@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<title>Test</title>
@@ -15,23 +15,23 @@
 	</style>
 </head>
 <body>
-<div class="info">Dobrodošli na sustav za navigaciju <br> Kliknite na ulicu unutar poligona kako biste kreirali rutu</div>
-<div class="warning" style="display:none">Ruta se kreira. Ruta će se pojaviti nakon što se podaci obrade. Budite strpljivi, ova operacija može potrajati do 30 sekundi</div>
-<div class="success" style="display:none">Ruta kreirana</div>
+<div class="info">Welcome to the navigation system <br/>Click on the street inside the polygon to create a route</div>
+<div class="warning" style="display:none">A route is being created. The route will appear after the data is processed. Be patient, this operation can take up to 30 seconds</div>
+<div class="success" style="display:none">Route created</div>
 <div id="map"></div>
 </body>
 </html>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="https://maps.google.com/maps/api/js"></script>
 <script>
 
 var last = new google.maps.LatLng(45.5580, 18.7134);
-var infowindow = new google.maps.InfoWindow({ content:"Šaljem hitnu OVDJE" });
-var granicaDosega = new Array();
-granicaDosega.push(new google.maps.LatLng(45.560794465,18.720910185));
-granicaDosega.push(new google.maps.LatLng(45.554514236,18.721532458));
-granicaDosega.push(new google.maps.LatLng(45.557969951,18.706876868));
-granicaDosega.push(new google.maps.LatLng(45.560148445,18.715073698));
-granicaDosega.push(new google.maps.LatLng(45.561170055,18.718828791));
+var infowindow = new google.maps.InfoWindow({ content:"I'm sending an ambulance HERE" });
+var reachLimit = new Array();
+reachLimit.push(new google.maps.LatLng(45.560794465,18.720910185));
+reachLimit.push(new google.maps.LatLng(45.554514236,18.721532458));
+reachLimit.push(new google.maps.LatLng(45.557969951,18.706876868));
+reachLimit.push(new google.maps.LatLng(45.560148445,18.715073698));
+reachLimit.push(new google.maps.LatLng(45.561170055,18.718828791));
 
 var map;
 window.onload = function() {
@@ -41,14 +41,14 @@ window.onload = function() {
         zoom: 16,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     });
-    var marker_bolnica = new google.maps.Marker({
+    var hospital_marker = new google.maps.Marker({
         position: latlng,
         map: map,
         title: 'KBC Osijek'
     });
 
 	var Polygon = new google.maps.Polygon({
-		paths: granicaDosega,
+		paths: reachLimit,
 		strokeColor: '#00FF00',
 		strokeOpacity: 1,
 		strokeWeight: 2,
@@ -56,25 +56,27 @@ window.onload = function() {
 		fillOpacity: 0.1
 	}); 
 	Polygon.setMap(map); 
-	google.maps.event.addListener(Polygon, 'click', function(event) {        
+	google.maps.event.addListener(Polygon, 'click', function(event) {
 	    var marker = new google.maps.Marker({
 	        position: event.latLng,
 	        map: map,
-	        title: 'Novi marker'
+	        title: 'New marker'
 	    }); 
 	    infowindow.open(map,marker);
-	    findPath(event.latLng.d.toFixed(9), event.latLng.e.toFixed(9));
+		// findPath(event.latLng.d.toFixed(9), event.latLng.e.toFixed(9));
+	    findPath(event.latLng.lat(9), event.latLng.lng(9));
 	    $('.info').hide();
 	    $('.warning').show();
 	    $('.success').hide();
-	    //console.log(event.latLng.nb.toFixed(9)+" "+event.latLng.ob.toFixed(9));	    
+	    // console.log(event.latLng.nb.toFixed(9)+" "+event.latLng.ob.toFixed(9));
+		console.log(event.latLng.lat().toFixed(9)+" "+event.latLng.lng().toFixed(9));
 	});  
 
 };
 
 function findPath(a,b) {
   jQuery.ajax({
-    url: "findPath.php?lat="+a+"&lng="+b,
+    url: "./findPath.php?lat="+a+"&lng="+b,
     cache: false,
     dataType: "json",
     success: function(json) {

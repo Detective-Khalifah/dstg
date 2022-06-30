@@ -1,5 +1,5 @@
-Projektni zadatak iz kolegija Diskretne strukture s teorijom grafova
+Project assignment from the course Discrete Structures with Graph Theory
 ====
 
-Opis:
-Ručno računanje udaljenost uz pomoć Dijkstra algoritna na Google Mapama
+Description:
+Manually calculate distance using Dijkstra algorithm on Google Maps

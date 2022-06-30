@@ -1,5 +1,8 @@
 import sys
-import cPickle
+try:
+  import cPickle as pickle
+except:
+  import pickle
 import urllib, json
 import pprint
 import time
@@ -17,7 +20,7 @@ def shortestpath(graph,start,end,visited=[],distances={},predecessors={}):
     # process neighbors as per algorithm, keep track of predecessors
     for neighbor in graph[start]:
         if neighbor not in visited:
-            neighbordist = distances.get(neighbor,sys.maxint)
+            neighbordist = distances.get(neighbor,sys.maxsize)
             tentativedist = distances[start] + graph[start][neighbor]
             if tentativedist < neighbordist:
                 distances[neighbor] = tentativedist
@@ -25,15 +28,15 @@ def shortestpath(graph,start,end,visited=[],distances={},predecessors={}):
     # neighbors processed, now mark the current node as visited
     visited.append(start)
     # finds the closest unvisited node to the start
-    unvisiteds = dict((k, distances.get(k,sys.maxint)) for k in graph if k not in visited)
+    unvisiteds = dict((k, distances.get(k,sys.maxsize)) for k in graph if k not in visited)
     closestnode = min(unvisiteds, key=unvisiteds.get)
     # now we can take the closest node and recurse, making it current
     return shortestpath(graph,closestnode,end,visited,distances,predecessors)
 
 #main
-coords = cPickle.load(open('coords.p', 'rb'))
-adjmat = cPickle.load(open('adjmat.p', 'rb'))
-distance = cPickle.load(open('distance.p', 'rb'))
+coords = pickle.load(open('coords.p', 'rb'))
+adjmat = pickle.load(open('adjmat.p', 'rb'))
+distance = pickle.load(open('distance.p', 'rb'))
 
 names = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','R','S','T','U','V','Z','X','Y','W','Q','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AR','AS','AT','AU','AV','AZ','AX','AY','AW','AQ']
 
@@ -45,13 +48,15 @@ izvan_dosega = 1
 coords.append([lat,lng])
 dis_temp = []
 adj_temp = []
-for red in distance: red.append(['a','b']);
-for red in adjmat: red.append(0);
+for red in distance:
+    red.append(['a','b'])
+for red in adjmat:
+    red.append(0)
 for b in coords:
-    adj_temp.append(0);
-    dis_temp.append(['a','b']);    
-distance.append(dis_temp);
-adjmat.append(adj_temp);
+    adj_temp.append(0)
+    dis_temp.append(['a','b'])
+distance.append(dis_temp)
+adjmat.append(adj_temp)
 
 for b in range(0,len(coords)):
     a = latLngNum
@@ -62,8 +67,8 @@ for b in range(0,len(coords)):
         if(a==b):
             distance[a][b] = 0
         if(a>b):
-            URL2 = "http://maps.googleapis.com/maps/api/directions/json?origin="+str(coords[a][0])+","+str(coords[a][1])+"&destination="+str(coords[b][0])+","+str(coords[b][1])+"&mode=walking&sensor=false"
-            googleResponse = urllib.urlopen(URL2)               
+            URL2 = "https://maps.googleapis.com/maps/api/directions/json?origin="+str(coords[a][0])+","+str(coords[a][1])+"&destination="+str(coords[b][0])+","+str(coords[b][1])+"&mode=walking&sensor=false"
+            googleResponse = urllib.request.urlopen(URL2)
             jsonResponse = json.loads(googleResponse.read())
             try:
                 ij_distance = jsonResponse['routes'][0]['legs'][0]['distance']['value']
@@ -109,6 +114,4 @@ else:
     	else:
     		fullCordsPath = fullCordsPath+ ";" + str(coords[poz][0])+","+str(coords[poz][1])
 
-print fullCordsPath
-
-
+print(fullCordsPath)
