@@ -5,8 +5,8 @@ newmatrix = []
 for a in coords:
     dis_temp = []
     for b in coords:
-        dis_temp.append(0);
-    newmatrix.append(dis_temp);
+        dis_temp.append(0)
+    newmatrix.append(dis_temp)
 
 for i in range(0,len(coords)):    
     print '-----------------'

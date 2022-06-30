@@ -32,8 +32,8 @@ while 1==1:
     print '2. Makni vezu'
     temp = int(raw_input('Povezani:'))
     if(temp==1):
-        dodaj();
+        dodaj()
     elif(temp==2):
-        makni();
+        makni()
 
 

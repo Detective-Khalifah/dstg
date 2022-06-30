@@ -12,7 +12,7 @@ distance = []
 
 num = 1
 num_max = len(coords)
-print "start"
+print("start")
 for a in coords:
     dis_temp = []
     for b in coords:        
@@ -21,15 +21,15 @@ for a in coords:
         jsonResponse = json.loads(googleResponse.read())
         test = json.dumps([s['legs'][0]['distance']['value'] for s in jsonResponse['routes']], indent=3)
         test =  test.replace("[", "").replace("]", "").replace(" ", "").strip('\n')
-        dis_temp.append(test);
+        dis_temp.append(test)
         #print a
         #print b
         #print test
         #print ''
         #print URL2
-    distance.append(dis_temp);
+    distance.append(dis_temp)
     num = num+1
-    print 100*num/(num_max*1.0)
+    print(100*num/(num_max*1.0))
     
-print distance
-print "end"
+print(distance)
+print("end")
